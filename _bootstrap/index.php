@@ -132,7 +132,7 @@ if ($action) {
 }
 */
 
-$settings = include dirname(__FILE__) . '/data/settings.php';
+$settings = include dirname(dirname(__FILE__)) . '/_build/data/settings.php';
 foreach ($settings as $key => $opts) {
     if (!createObject('modSystemSetting', array(
         'key' => 'gitifywatch.' . $key,

@@ -6,6 +6,6 @@ return array(
     ),
     'gitify_path' => array(
         'area' => 'Gitify',
-        'value' => '{base_path}Gitify',
+        'value' => '{base_path}Gitify/',
     ),
 );

@@ -22,7 +22,7 @@ if (!defined('MOREPROVIDER_BUILD')) {
     define('PKG_NAME','GitifyWatch');
     define('PKG_NAME_LOWER',strtolower(PKG_NAME));
     define('PKG_VERSION','1.0.0');
-    define('PKG_RELEASE','pl');
+    define('PKG_RELEASE','dev2');
 
     /* load modx */
     require_once dirname(dirname(__FILE__)) . '/config.core.php';

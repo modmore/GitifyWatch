@@ -27,6 +27,10 @@ $environment = $gitifywatch->getEnvironment();
 $trigger = false;
 $username = ($modx->user) ? $modx->user->get('username') : 'Anonymous';
 
+if (!$environment || !$environment['auto_commit_and_push']) {
+    $modx->log(modX::LOG_LEVEL_WARN, '[GitifyWatch] Not allowed to commit and push on this environment: ' . print_r($environment, true), '', 'GitifyWatch plugin', __FILE__, __LINE__);
+    return;
+}
 
 switch ($modx->event->name) {
     case 'OnDocFormSave':
@@ -179,7 +183,15 @@ if ($trigger) {
             $run->set('data', $data);
             $run->save();
         } else {
-            $task->schedule(time() - 60, array(
+            $commitDelay = isset($environment['commit_delay']) ? $environment['commit_delay'] : 'instant';
+            if ($commitDelay == 'instant') {
+                $time = time() - 60;
+            }
+            else {
+                $time = time() + ($commitDelay * 60);
+            }
+
+            $task->schedule($time, array(
                 'triggers' => array($trigger),
             ));
         }

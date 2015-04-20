@@ -1,4 +1,4 @@
-<?php
+G<?php
 namespace mhwd;
 
 use Git;
@@ -186,7 +186,7 @@ class GitifyWatch {
                 $defaults = array_merge($defaults, $envs['defaults']);
             }
 
-            $host = $_SERVER['HTTP_HOST'];
+            $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : MODX_HTTP_HOST;
             $environment = (isset($envs[$host])) ? $envs[$host] : array();
             $this->environment = array_merge($defaults, $environment);
         }

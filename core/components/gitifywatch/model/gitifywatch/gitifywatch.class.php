@@ -1,4 +1,4 @@
-G<?php
+<?php
 namespace mhwd;
 
 use Git;

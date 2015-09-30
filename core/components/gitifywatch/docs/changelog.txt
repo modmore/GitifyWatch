@@ -1,4 +1,4 @@
 ++ Gitify Watch 1.0.0-rc1
-++ Released on 2015-04-15
+++ Released on 2015-09-30
 +++++++++++++++++++++++++
-- First public release
+- First testable release

@@ -88,10 +88,17 @@ else {
 
 $gitifywatch->extract($partitions, true, $message);
 
+if (!function_exists('niceImplode')) {
+    function niceImplode($items)
+    {
+        $count = count($items);
+        if ($count === 1) {
+            return reset($items);
+        }
+        if ($count === 2) {
+            return reset($items) . ' and ' . end($items);
+        }
 
-function niceImplode($items) {
-    $count = count($items);
-    if ($count === 1) return reset($items);
-    if ($count === 2) return reset($items) . ' and ' . end($items);
-    return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+        return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+    }
 }

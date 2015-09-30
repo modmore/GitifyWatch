@@ -60,19 +60,17 @@ class GitifyWatch {
     public function getGitRepository()
     {
         if (!$this->repository) {
-            $path = dirname(dirname(__FILE__)) . '/kbjr_gitphp/Git.php';
-            require_once($path);
-            if (!class_exists('Git')) {
-                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Git helper class from '. $path, '', __METHOD__, __FILE__, __LINE__);
+            if (!$this->getGitifyInstance()) {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Gitify instance', '', __METHOD__, __FILE__, __LINE__);
                 return false;
             }
 
-            $repo = Git::open($this->config['repositoryPath']);
-
+            $repo = $this->gitify->getGitRepository();
             if (!$repo) {
-                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Git Repository in ' . $this->config['repositoryPath'], '', __METHOD__, __FILE__, __LINE__);
+                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Git Repository object', '', __METHOD__, __FILE__, __LINE__);
                 return false;
             }
+
             $this->repository = $repo;
         }
 
@@ -149,51 +147,13 @@ class GitifyWatch {
         if (empty($this->environment)) {
             try {
                 $this->getGitifyInstance();
-                $config = Gitify::loadConfig();
             } catch (\RuntimeException $e) {
                 $this->modx->log(modX::LOG_LEVEL_ERROR, 'Error loading environment configuration: ' . $e->getMessage(), '', __METHOD__, __FILE__, __LINE__);
                 return false;
-
             }
 
-            $envs = (isset($config['environments']) && is_array($config['environments'])) ? $config['environments'] : array();
-            $defaults = array(
-                'name' => '-unnamed environment-',
-                'branch' => 'develop',
-                'auto_commit_and_push' => true,
-                'remote' => 'origin',
-                'partitions' => array(
-                    'modResource' => 'content',
-                    'modTemplate' => 'templates',
-                    'modCategory' => 'categories',
-                    'modTemplateVar' => 'template_variables',
-                    'modChunk' => 'chunks',
-                    'modSnippet' => 'snippets',
-                    'modPlugin' => 'plugins'
-                    /*
-                partitions:
-                    modResource: content
-                    modTemplate: templates
-                    modCategory: categories
-                    modTemplateVar: template_variables
-                    modChunk: chunks
-                    modSnippet: snippets
-                    modPlugin: plugins*/
-                )
-            );
-
-            if (isset($envs['defaults']) && is_array($envs['defaults'])) {
-                $defaults = array_merge($defaults, $envs['defaults']);
-            }
-
-            $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : MODX_HTTP_HOST;
-            $environment = (isset($envs[$host])) ? $envs[$host] : array();
-            $this->environment = array_merge($defaults, $environment);
+            $this->environment = $this->gitify->getEnvironment();
         }
         return $this->environment;
     }
-
-
-
-
 }

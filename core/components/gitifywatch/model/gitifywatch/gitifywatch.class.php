@@ -131,7 +131,7 @@ class GitifyWatch {
             // Add all changed files
             $log['add'] = $repo->add('.');
             $log['commit'] = $repo->commit($message);
-            $log['push'] = $repo->push($environment['remote'], $environment['branch']);
+            $log['push'] = $repo->push($environment['remote'], $repo->active_branch());
 
             $this->modx->log(modX::LOG_LEVEL_WARN, 'Auto-committing & pushing results: ' . print_r($log, true), '', __METHOD__, __FILE__, __LINE__);
 

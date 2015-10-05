@@ -1,4 +1,5 @@
 - Improved error handling related to fetching the environment information
+- Make sure the push always targets the current branch
 
 ++ Gitify Watch 1.0.0-rc1
 ++ Released on 2015-09-30

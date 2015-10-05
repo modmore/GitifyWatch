@@ -146,13 +146,16 @@ class GitifyWatch {
     {
         if (empty($this->environment)) {
             try {
-                $this->getGitifyInstance();
+                if ($this->getGitifyInstance()) {
+                    $this->environment = $this->gitify->getEnvironment();
+                }
+                else {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, 'Error loading environment configuration: Gitify not loaded', '', __METHOD__, __FILE__, __LINE__);
+                }
             } catch (\RuntimeException $e) {
                 $this->modx->log(modX::LOG_LEVEL_ERROR, 'Error loading environment configuration: ' . $e->getMessage(), '', __METHOD__, __FILE__, __LINE__);
                 return false;
             }
-
-            $this->environment = $this->gitify->getEnvironment();
         }
         return $this->environment;
     }

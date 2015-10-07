@@ -1,3 +1,5 @@
+- Fix undefined function error
+
 ++ Gitify Watch 1.0.0-rc2
 ++ Released on 2015-10-05
 +++++++++++++++++++++++++

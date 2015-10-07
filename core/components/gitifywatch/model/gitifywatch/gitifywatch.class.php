@@ -159,4 +159,17 @@ class GitifyWatch {
         }
         return $this->environment;
     }
+
+    public function niceImplode($items)
+    {
+        $count = count($items);
+        if ($count === 1) {
+            return reset($items);
+        }
+        if ($count === 2) {
+            return reset($items) . ' and ' . end($items);
+        }
+
+        return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+    }
 }

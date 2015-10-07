@@ -62,11 +62,11 @@ else {
         $message = "{$uc} users";
     }
     else {
-        $message = niceImplode($users);
+        $message = $gitifywatch->niceImplode($users);
     }
 
     // Add what happened (created, edited, deleted etc)
-    $message .= ' ' . niceImplode($modes) . ' ';
+    $message .= ' ' . $gitifywatch->niceImplode($modes) . ' ';
 
     // Add the targets
     $targetCount = count($targets);
@@ -74,7 +74,7 @@ else {
         $message .= $targetCount . ' objects';
     }
     else {
-        $message .= niceImplode($targets);
+        $message .= $gitifywatch->niceImplode($targets);
     }
 
     // Add the environment name
@@ -87,18 +87,3 @@ else {
 }
 
 $gitifywatch->extract($partitions, true, $message);
-
-if (!function_exists('niceImplode')) {
-    function niceImplode($items)
-    {
-        $count = count($items);
-        if ($count === 1) {
-            return reset($items);
-        }
-        if ($count === 2) {
-            return reset($items) . ' and ' . end($items);
-        }
-
-        return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
-    }
-}

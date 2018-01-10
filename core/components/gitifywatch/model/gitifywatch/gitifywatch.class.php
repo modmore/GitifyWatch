@@ -116,7 +116,7 @@ class GitifyWatch {
         $repo = $this->getGitRepository();
         $environment = $this->getEnvironment();
 
-        if (!$repo) {
+        if (!$repo || !is_object($repo)) {
             $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not commit changes; repository was not found.');
             return false;
         }

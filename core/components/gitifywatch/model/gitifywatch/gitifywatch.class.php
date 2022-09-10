@@ -1,17 +1,19 @@
 <?php
-namespace mhwd;
+namespace modmore\GitifyWatch;
 
-use Git;
-use GitRepo;
+use Kbjr\Git\Git;
+use Kbjr\Git\GitRepo;
 use modmore\Gitify\Gitify;
 use modX;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class GitifyWatch {
-    public $config = array();
+require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
-    protected $environment = array();
+class GitifyWatch {
+    public $config = [];
+
+    protected $environment = [];
 
     /** @var modX|null  */
     public $modx;
@@ -22,15 +24,15 @@ class GitifyWatch {
     /** @var GitRepo|null */
     protected $repository;
 
-    public function __construct(modX $modx, array $config = array())
+    public function __construct(modX $modx, array $config = [])
     {
         $this->modx = $modx;
-        $this->config = array_merge(array(
+        $this->config = array_merge([
             'repositoryPath' => $this->modx->getOption('gitifywatch.repository_path', null, MODX_BASE_PATH, true)
-        ), $config);
+        ], $config);
     }
 
-    public function getGitifyInstance(array $options = array()) {
+    public function getGitifyInstance(array $options = []) {
         if (!$this->gitify) {
             $path = $this->modx->getOption('gitifywatch.gitify_path', null, false, true);
             if (!$path || !is_dir($path)) {
@@ -57,27 +59,48 @@ class GitifyWatch {
         return $this->gitify;
     }
 
+//    public function getGitRepository()
+//    {
+//        if (!$this->repository) {
+//            if (!$this->getGitifyInstance()) {
+//                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Gitify instance', '', __METHOD__, __FILE__, __LINE__);
+//                return false;
+//            }
+//
+//            $repo = $this->gitify->getGitRepository();
+//            if (!$repo) {
+//                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Git Repository object', '', __METHOD__, __FILE__, __LINE__);
+//                return false;
+//            }
+//
+//            $this->repository = $repo;
+//        }
+//
+//        return $this->repository;
+//    }
+
+    /**
+     * @return GitRepo|bool
+     */
     public function getGitRepository()
     {
-        if (!$this->repository) {
-            if (!$this->getGitifyInstance()) {
-                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Gitify instance', '', __METHOD__, __FILE__, __LINE__);
-                return false;
+        try {
+            if (!$this->repository) {
+                $gitPath = Gitify::loadMODX()->getOption('gitify.git_path', null, '/usr/bin/git');
+                if (!empty($gitPath)) {
+                    Git::setBin($gitPath);
+                }
+                $repositoryPath = Gitify::loadMODX()->getOption('gitifywatch.repository_path', null, MODX_BASE_PATH, true);
+                $this->repository = Git::open($repositoryPath);
             }
-
-            $repo = $this->gitify->getGitRepository();
-            if (!$repo) {
-                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Git Repository object', '', __METHOD__, __FILE__, __LINE__);
-                return false;
-            }
-
-            $this->repository = $repo;
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
 
         return $this->repository;
     }
 
-    public function extract(array $partitions = array(), $commit = true, $commitMessage = '')
+    public function extract(array $partitions = [], $commit = true, $commitMessage = '')
     {
         $gitify = $this->getGitifyInstance();
         if (!$gitify) {
@@ -85,9 +108,9 @@ class GitifyWatch {
         }
 
         $extract = $gitify->find('extract');
-        $inputArray = array(
+        $inputArray = [
             'command' => 'extract',
-        );
+        ];
         if (count($partitions) > 0) {
             $inputArray['partitions'] = $partitions;
         }
@@ -127,7 +150,7 @@ class GitifyWatch {
         }
 
         try {
-            $log = array();
+            $log = [];
             // Add all changed files
             $log['add'] = $repo->add('.');
             $log['commit'] = $repo->commit($message);

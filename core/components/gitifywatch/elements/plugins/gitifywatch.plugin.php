@@ -1,6 +1,6 @@
 <?php
 /**
- * @var modX $modx
+ * @var modX|MODX\Revolution\modX $modx
  * @var array $scriptProperties
  * @var GitifyWatch $gitifywatch
  */
@@ -9,7 +9,7 @@ use modmore\GitifyWatch\GitifyWatch;
 
 $path = $modx->getOption('gitifywatch.core_path', null, MODX_CORE_PATH  . 'components/gitifywatch/', true);
 require_once($path . 'model/gitifywatch/gitifywatch.class.php');
-$gitifywatch = $modx->getService('gitifywatch', 'modmore\GitifyWatch\GitifyWatch', $path . 'model/gitifywatch/');
+$gitifywatch = $modx->getService('gitifywatch', GitifyWatch::class, $path . 'model/gitifywatch/');
 
 if (!$gitifywatch) {
     $modx->log(modX::LOG_LEVEL_ERROR, 'Could not load gitifywatch service from ' . $path);
@@ -35,7 +35,7 @@ if (!$environment || !$environment['auto_commit_and_push']) {
 switch ($modx->event->name) {
     case 'OnDocFormSave':
         /**
-         * @var int $mode
+         * @var string $mode
          * @var modResource $resource
          */
         $trigger = [
@@ -48,7 +48,7 @@ switch ($modx->event->name) {
 
     case 'OnTempFormSave':
         /**
-         * @var int $mode
+         * @var string $mode
          * @var modTemplate $template
          */
         $trigger = [
@@ -97,7 +97,7 @@ switch ($modx->event->name) {
 
     case 'OnChunkFormSave':
         /**
-         * @var int $mode
+         * @var string $mode
          * @var modChunk $chunk
          */
         $trigger = [
@@ -121,7 +121,7 @@ switch ($modx->event->name) {
     
     case 'OnSnipFormSave':
         /**
-         * @var int $mode
+         * @var string $mode
          * @var modSnippet $snippet
          */
         $trigger = [
@@ -144,7 +144,7 @@ switch ($modx->event->name) {
         break;
     case 'OnPluginFormSave':
         /**
-         * @var int $mode
+         * @var string $mode
          * @var modPlugin $plugin
          */
         $trigger = [

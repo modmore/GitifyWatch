@@ -1,23 +1,23 @@
 <?php
 /**
- * @var modX $modx
+ * @var modX|MODX\Revolution\modX $modx
  * @var sTask $task
  * @var sTaskRun $run
  *
  * @var GitifyWatch $gitifywatch
  */
 
-use mhwd\GitifyWatch;
+use modmore\GitifyWatch\GitifyWatch;
 
 $path = $modx->getOption('gitifywatch.core_path', null, MODX_CORE_PATH  . 'components/gitifywatch/', true);
 require_once($path . 'model/gitifywatch/gitifywatch.class.php');
-$gitifywatch = $modx->getService('gitifywatch', 'mhwd\GitifyWatch', $path . 'model/gitifywatch/');
+$gitifywatch = $modx->getService('gitifywatch', GitifyWatch::class, $path . 'model/gitifywatch/');
 
 if (!$gitifywatch) {
-    $run->addError('error_loading_service', array(
+    $run->addError('error_loading_service', [
         'message' => 'Could not load required gitifywatch service.',
         'path' => $path . 'model/gitifywatch/',
-    ));
+    ]);
     return false;
 }
 
@@ -25,11 +25,11 @@ $environment = $gitifywatch->getEnvironment();
 
 $data = $run->get('data');
 
-$partitions = array();
-$users = array();
-$targets = array();
-$chronological = array();
-$modes = array();
+$partitions = [];
+$users = [];
+$targets = [];
+$chronological = [];
+$modes = [];
 
 foreach ($data['triggers'] as $trigger) {
     $chronological[] = "{$trigger['username']} {$trigger['mode']} {$trigger['target']} ";

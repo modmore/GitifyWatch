@@ -5,8 +5,6 @@
  * @var GitifyWatch $gitifywatch
  */
 
-use modmore\GitifyWatch\GitifyWatch;
-
 $path = $modx->getOption('gitifywatch.core_path', null, MODX_CORE_PATH  . 'components/gitifywatch/', true);
 require_once($path . 'model/gitifywatch/gitifywatch.class.php');
 $gitifywatch = $modx->getService('gitifywatch', GitifyWatch::class, $path . 'model/gitifywatch/');

@@ -17,7 +17,7 @@ $modx->getService('error','error.modError', '', '');
 $componentPath = dirname(dirname(__FILE__));
 
 require_once($componentPath . '/core/components/gitifywatch/model/gitifywatch/gitifywatch.class.php');
-$gitifywatch = $modx->getService('gitifywatch','mhwd\GitifyWatch', $componentPath.'/core/components/gitifywatch/model/gitifywatch/', [
+$gitifywatch = $modx->getService('gitifywatch','GitifyWatch', $componentPath.'/core/components/gitifywatch/model/gitifywatch/', [
     'gitifywatch.core_path' => $componentPath.'/core/components/gitifywatch/',
 ]);
 

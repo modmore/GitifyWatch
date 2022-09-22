@@ -7,7 +7,6 @@
  * @var GitifyWatch $gitifywatch
  */
 
-use modmore\GitifyWatch\GitifyWatch;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 
 $path = $modx->getOption('gitifywatch.core_path', null, MODX_CORE_PATH  . 'components/gitifywatch/', true);

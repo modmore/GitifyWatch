@@ -1,15 +1,15 @@
 <?php
-namespace modmore\GitifyWatch;
 
 use Kbjr\Git\Git;
 use Kbjr\Git\GitRepo;
 use modmore\Gitify\Gitify;
-use modX;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+require_once dirname(__DIR__, 2) . '/vendor/kbjr/git.php/src/Git.php';
+require_once dirname(__DIR__, 2) . '/vendor/kbjr/git.php/src/GitRepo.php';
 
 class GitifyWatch {
     public $config = [];
@@ -106,7 +106,6 @@ class GitifyWatch {
         $input = new ArrayInput($inputArray);
         $output = new BufferedOutput();
         $returnCode = $extract->run($input, $output);
-
         if ($returnCode === 0) {
             if ($commit) {
                 return $this->commitAndPush($commitMessage);
@@ -144,7 +143,6 @@ class GitifyWatch {
             $log['add'] = $repo->add('.');
             $log['commit'] = $repo->commit($message);
             $log['push'] = $repo->push($environment['remote'], $repo->activeBranch());
-
             $this->modx->log(modX::LOG_LEVEL_WARN, 'Auto-committing & pushing results: ' . print_r($log, true), '', __METHOD__, __FILE__, __LINE__);
 
             return true;

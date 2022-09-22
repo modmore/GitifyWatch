@@ -1,5 +1,9 @@
 <?php
-$plugins = array();
+/**
+ * @var modX $modx
+ * @var array $sources
+ */
+$plugins = [];
 
 /** create the plugin object */
 $plugins[0] = $modx->newObject('modPlugin');

@@ -11,16 +11,14 @@ if (!$scheduler) {
     Scheduler for running the extract asynchronously. Please install Scheduler first and reinstall GitifyWatch after that.');
     return false;
 }
-else {
-    if (!$scheduler->getTask('gitifywatch', 'extract')) {
-        $task = $modx->newObject(sTask::class);
-        $task->fromArray([
-            'class_key' => sFileTask::class,
-            'content' => 'elements/tasks/extract.task.php',
-            'namespace' => 'gitifywatch',
-            'reference' => 'extract',
-            'description' => 'Extracts data from the database, commits it and pushes it to the remote git server.'
-        ]);
-        return $task->save();
-    }
+elseif (!$scheduler->getTask('gitifywatch', 'extract')) {
+    $task = $modx->newObject(sTask::class);
+    $task->fromArray([
+        'class_key' => sFileTask::class,
+        'content' => 'elements/tasks/extract.task.php',
+        'namespace' => 'gitifywatch',
+        'reference' => 'extract',
+        'description' => 'Extracts data from the database, commits it and pushes it to the remote git server.'
+    ]);
+    return $task->save();
 }

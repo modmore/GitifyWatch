@@ -8,6 +8,7 @@
  */
 
 use modmore\GitifyWatch\GitifyWatch;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 
 $path = $modx->getOption('gitifywatch.core_path', null, MODX_CORE_PATH  . 'components/gitifywatch/', true);
 require_once($path . 'model/gitifywatch/gitifywatch.class.php');
@@ -86,4 +87,9 @@ else {
     }
 }
 
-$gitifywatch->extract($partitions, true, $message);
+try {
+    $gitifywatch->extract($partitions, true, $message);
+}
+catch (ExceptionInterface $e) {
+    $this->modx->log(modX::LOG_LEVEL_ERROR, $e->getMessage());
+}

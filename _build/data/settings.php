@@ -1,11 +1,11 @@
 <?php
-return array(
-    'repository_path' => array(
+return [
+    'repository_path' => [
         'area' => 'Gitify',
         'value' => '{base_path}',
-    ),
-    'gitify_path' => array(
+    ],
+    'gitify_path' => [
         'area' => 'Gitify',
         'value' => '{base_path}Gitify/',
-    ),
-);
+    ],
+];

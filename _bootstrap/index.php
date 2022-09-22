@@ -17,29 +17,29 @@ $modx->getService('error','error.modError', '', '');
 $componentPath = dirname(dirname(__FILE__));
 
 require_once($componentPath . '/core/components/gitifywatch/model/gitifywatch/gitifywatch.class.php');
-$gitifywatch = $modx->getService('gitifywatch','mhwd\GitifyWatch', $componentPath.'/core/components/gitifywatch/model/gitifywatch/', array(
+$gitifywatch = $modx->getService('gitifywatch','mhwd\GitifyWatch', $componentPath.'/core/components/gitifywatch/model/gitifywatch/', [
     'gitifywatch.core_path' => $componentPath.'/core/components/gitifywatch/',
-));
+]);
 
 
 /* Namespace */
-if (!createObject('modNamespace',array(
+if (!createObject('modNamespace', [
     'name' => 'gitifywatch',
     'path' => $componentPath.'/core/components/gitifywatch/',
     'assets_path' => $componentPath.'/assets/components/gitifywatch/',
-),'name', false)) {
+],'name', false)) {
     echo "Error creating namespace gitifywatch.\n";
 }
 
 /* Path settings */
-if (!createObject('modSystemSetting', array(
+if (!createObject('modSystemSetting', [
     'key' => 'gitifywatch.core_path',
     'value' => $componentPath.'/core/components/gitifywatch/',
     'xtype' => 'textfield',
     'namespace' => 'gitifywatch',
     'area' => 'Paths',
     'editedon' => time(),
-), 'key', false)) {
+], 'key', false)) {
     echo "Error creating gitifywatch.core_path setting.\n";
 }
 
@@ -57,28 +57,28 @@ $bootstrapPos = strpos($requestUri, '_bootstrap/');
 $requestUri = rtrim(substr($requestUri, 0, $bootstrapPos), '/').'/';
 $assetsUrl = "{$url}{$requestUri}assets/components/gitifywatch/";
 
-if (!createObject('modSystemSetting', array(
+if (!createObject('modSystemSetting', [
     'key' => 'gitifywatch.assets_url',
     'value' => $assetsUrl,
     'xtype' => 'textfield',
     'namespace' => 'gitifywatch',
     'area' => 'Paths',
     'editedon' => time(),
-), 'key', false)) {
+], 'key', false)) {
     echo "Error creating gitifywatch.assets_url setting.\n";
 }
 
 
-if (!createObject('modPlugin', array(
-    'name' => 'GitifyWatcher',
+if (!createObject('modPlugin', [
+    'name' => 'GitifyWatch',
     'static' => true,
-    'static_file' => $componentPath.'/core/components/gitifywatch/elements/plugins/gitifywatcher.plugin.php',
-), 'name', false)) {
-    echo "Error creating GitifyWatcher Plugin.\n";
+    'static_file' => $componentPath.'/core/components/gitifywatch/elements/plugins/gitifywatch.plugin.php',
+], 'name', false)) {
+    echo "Error creating GitifyWatch Plugin.\n";
 }
-$plugin = $modx->getObject('modPlugin', array('name' => 'GitifyWatcher'));
+$plugin = $modx->getObject('modPlugin', ['name' => 'GitifyWatch']);
 if ($plugin) {
-    $events = array(
+    $events = [
         'OnDocFormSave',
         'OnTempFormSave',
         'OnTempFormDelete',
@@ -90,14 +90,14 @@ if ($plugin) {
         'OnSnipFormDelete',
         'OnPluginFormSave',
         'OnPluginFormDelete',
-    );
+    ];
 
     foreach ($events as $ev) {
-        if (!createObject('modPluginEvent', array(
+        if (!createObject('modPluginEvent', [
             'pluginid' => $plugin->get('id'),
             'event' => $ev,
             'priority' => 0,
-        ), array('pluginid','event'), false)) {
+        ], ['pluginid','event'], false)) {
             echo "Error creating modPluginEvent {$ev}.\n";
         }
     }
@@ -134,14 +134,14 @@ if ($action) {
 
 $settings = include dirname(dirname(__FILE__)) . '/_build/data/settings.php';
 foreach ($settings as $key => $opts) {
-    if (!createObject('modSystemSetting', array(
+    if (!createObject('modSystemSetting', [
         'key' => 'gitifywatch.' . $key,
         'value' => $opts['value'],
         'xtype' => (isset($opts['xtype'])) ? $opts['xtype'] : 'textfield',
         'namespace' => 'gitifywatch',
         'area' => $opts['area'],
         'editedon' => time(),
-    ), 'key', false)) {
+    ], 'key', false)) {
         echo "Error creating gitifywatch.".$key." setting.\n";
     }
 }
@@ -154,17 +154,16 @@ $scheduler = $modx->getService('scheduler', 'Scheduler', $path . 'model/schedule
 if (!$scheduler) {
     echo "<strong>Please install Scheduler to install the Tasks</strong>\n";
 }
-else {
-    if (!createObject('sTask', array(
-        'class_key' => 'sFileTask',
-        'content' => 'elements/tasks/extract.task.php',
-        'namespace' => 'gitifywatch',
-        'reference' => 'extract',
-        'description' => 'Extracts data from the database, commits it and pushes it to the remote git server.'
-    ), 'reference', false)) {
-        echo "Error creating sTask object";
-    }
+elseif (!createObject('sTask', [
+    'class_key' => 'sFileTask',
+    'content' => 'elements/tasks/extract.task.php',
+    'namespace' => 'gitifywatch',
+    'reference' => 'extract',
+    'description' => 'Extracts data from the database, commits it and pushes it to the remote git server.'
+], 'reference', false)) {
+    echo "Error creating sTask object";
 }
+
 
 
 $manager = $modx->getManager();
@@ -194,7 +193,7 @@ echo "Done.";
  * @param bool $update
  * @return bool
  */
-function createObject ($className = '', array $data = array(), $primaryField = '', $update = true) {
+function createObject ($className = '', array $data = [], $primaryField = '', $update = true) {
     global $modx;
     /* @var xPDOObject $object */
     $object = null;
@@ -202,13 +201,13 @@ function createObject ($className = '', array $data = array(), $primaryField = '
     /* Attempt to get the existing object */
     if (!empty($primaryField)) {
         if (is_array($primaryField)) {
-            $condition = array();
+            $condition = [];
             foreach ($primaryField as $key) {
                 $condition[$key] = $data[$key];
             }
         }
         else {
-            $condition = array($primaryField => $data[$primaryField]);
+            $condition = [$primaryField => $data[$primaryField]];
         }
         $object = $modx->getObject($className, $condition);
         if ($object instanceof $className) {

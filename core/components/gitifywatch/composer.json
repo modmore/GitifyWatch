@@ -1,6 +1,6 @@
 {
   "name": "modmore/gitifywatch",
-  "description": "Command line toolkit to make managing a MODX site in git a lot easier",
+  "description": "Gitify Watch is a MODX plugin to complement the Gitify command line tool. It hooks into various MODX events, and will automatically extract and commit changes you make.",
   "license": "MIT",
   "require": {
     "kbjr/git.php": "*",

@@ -2,7 +2,7 @@
 
 $settingSource = include dirname(__FILE__).'/settings.php';
 
-$settings = array();
+$settings = [];
 
 /**
  * Loop over setting stuff to interpret the xtype and to create the modSystemSetting object for the package.
@@ -17,14 +17,14 @@ foreach ($settingSource as $key => $options) {
 
     /** @var modSystemSetting */
     $settings[$key] = $modx->newObject('modSystemSetting');
-    $settings[$key]->fromArray(array(
+    $settings[$key]->fromArray([
         'key' => 'gitifywatch.' . $key,
         'xtype' => $xtype,
         'value' => $options['value'],
         'namespace' => 'gitifywatch',
         'area' => $options['area'],
         'editedon' => time(),
-    ), '', true, true);
+    ], '', true, true);
 }
 
 

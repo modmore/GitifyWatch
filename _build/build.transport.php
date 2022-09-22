@@ -5,7 +5,8 @@
  * @return string The file's content
  * @by splittingred
  */
-function getSnippetContent($filename = '') {
+function getSnippetContent($filename = ''): string
+{
     $o = file_get_contents($filename);
     $o = str_replace('<?php','',$o);
     $o = str_replace('?>','',$o);
@@ -21,8 +22,8 @@ if (!defined('MOREPROVIDER_BUILD')) {
     /* define version */
     define('PKG_NAME','GitifyWatch');
     define('PKG_NAME_LOWER',strtolower(PKG_NAME));
-    define('PKG_VERSION','1.0.0');
-    define('PKG_RELEASE','dev5');
+    define('PKG_VERSION','2.0.0');
+    define('PKG_RELEASE','dev1');
 
     /* load modx */
     require_once dirname(dirname(__FILE__)) . '/config.core.php';
@@ -42,7 +43,7 @@ else {
 }
 /* define build paths */
 $root = dirname(dirname(__FILE__)).'/';
-$sources = array(
+$sources = [
     'root' => $root,
     'build' => $root.'_build/',
     'data' => $root.'_build/data/',
@@ -56,7 +57,7 @@ $sources = array(
     'elements' => $root.'core/components/'.PKG_NAME_LOWER.'/elements/',
     'source_assets' => $root.'assets/components/'.PKG_NAME_LOWER.'/',
     'source_core' => $root.'core/components/'.PKG_NAME_LOWER.'/',
-);
+];
 unset($root);
 
 $modx->loadClass('transport.modPackageBuilder','',false, true);
@@ -68,11 +69,11 @@ $builder->registerNamespace(PKG_NAME_LOWER, false, true, '{core_path}components/
 
 /* Settings */
 $settings = include_once $sources['data'].'transport.settings.php';
-$attributes= array(
+$attributes= [
     xPDOTransport::UNIQUE_KEY => 'key',
     xPDOTransport::PRESERVE_KEYS => true,
     xPDOTransport::UPDATE_OBJECT => false,
-);
+];
 if (is_array($settings)) {
     foreach ($settings as $setting) {
         $vehicle = $builder->createVehicle($setting,$attributes);
@@ -99,27 +100,27 @@ unset($plugins);
 
 
 /* create category vehicle */
-$attr = array(
+$attr = [
     xPDOTransport::UNIQUE_KEY => 'category',
     xPDOTransport::PRESERVE_KEYS => true,
     xPDOTransport::UPDATE_OBJECT => false,
     xPDOTransport::RELATED_OBJECTS => true,
-    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-        'Plugins' => array(
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => [
+        'Plugins' => [
             xPDOTransport::PRESERVE_KEYS => true,
             xPDOTransport::UPDATE_OBJECT => true,
             xPDOTransport::UNIQUE_KEY => 'name',
             xPDOTransport::RELATED_OBJECTS => true,
-            xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-                'PluginEvents' => array(
+            xPDOTransport::RELATED_OBJECT_ATTRIBUTES => [
+                'PluginEvents' => [
                     xPDOTransport::PRESERVE_KEYS => true,
                     xPDOTransport::UPDATE_OBJECT => false,
-                    xPDOTransport::UNIQUE_KEY => array('pluginid','event'),
-                ),
-            ),
-        ),
-    )
-);
+                    xPDOTransport::UNIQUE_KEY => ['pluginid','event'],
+                ],
+            ],
+        ],
+    ]
+];
 
 $vehicle = $builder->createVehicle($category,$attr);
 
@@ -129,13 +130,16 @@ $modx->log(modX::LOG_LEVEL_INFO, 'Adding core/assets file resolvers to category.
     'source' => $sources['source_assets'],
     'target' => "return MODX_ASSETS_PATH . 'components/';",
 ));*/
-$vehicle->resolve('file',array(
+$vehicle->resolve('file', [
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';",
-));
-$vehicle->resolve('php',array(
+]);
+$vehicle->resolve('php', [
     'source' => $sources['resolvers'] . 'scheduler.resolver.php',
-));
+]);
+$vehicle->resolve('php', [
+    'source' => $sources['resolvers'] . 'composer.resolver.php',
+]);
 
 $builder->putVehicle($vehicle);
 unset($vehicle, $menu);
@@ -143,14 +147,14 @@ unset($vehicle, $menu);
 
 /* zip up package */
 $modx->log(modX::LOG_LEVEL_INFO,'Adding package attributes and setup options...');
-$builder->setPackageAttributes(array(
+$builder->setPackageAttributes([
     'license' => file_get_contents($sources['docs'].'license.txt'),
     'readme' => file_get_contents($sources['docs'].'readme.txt'),
     'changelog' => file_get_contents($sources['docs'].'changelog.txt'),
     /*'setup-options' => array(
         'source' => $sources['build'].'setup.options.php',
     ),*/
-));
+]);
 
 $modx->log(modX::LOG_LEVEL_INFO,'Packing up transport package zip...');
 $builder->pack();

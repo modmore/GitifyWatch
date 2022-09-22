@@ -5,6 +5,7 @@ use Kbjr\Git\Git;
 use Kbjr\Git\GitRepo;
 use modmore\Gitify\Gitify;
 use modX;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -32,7 +33,8 @@ class GitifyWatch {
         ], $config);
     }
 
-    public function getGitifyInstance(array $options = []) {
+    public function getGitifyInstance(array $options = [])
+    {
         if (!$this->gitify) {
             $path = $this->modx->getOption('gitifywatch.gitify_path', null, false, true);
             if (!$path || !is_dir($path)) {
@@ -59,28 +61,8 @@ class GitifyWatch {
         return $this->gitify;
     }
 
-//    public function getGitRepository()
-//    {
-//        if (!$this->repository) {
-//            if (!$this->getGitifyInstance()) {
-//                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Gitify instance', '', __METHOD__, __FILE__, __LINE__);
-//                return false;
-//            }
-//
-//            $repo = $this->gitify->getGitRepository();
-//            if (!$repo) {
-//                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not load Git Repository object', '', __METHOD__, __FILE__, __LINE__);
-//                return false;
-//            }
-//
-//            $this->repository = $repo;
-//        }
-//
-//        return $this->repository;
-//    }
-
     /**
-     * @return GitRepo|bool
+     * @return GitRepo|string
      */
     public function getGitRepository()
     {
@@ -100,7 +82,14 @@ class GitifyWatch {
         return $this->repository;
     }
 
-    public function extract(array $partitions = [], $commit = true, $commitMessage = '')
+    /**
+     * @param array $partitions
+     * @param bool $commit
+     * @param string $commitMessage
+     * @return bool
+     * @throws ExceptionInterface
+     */
+    public function extract(array $partitions = [], bool $commit = true, string $commitMessage = ''): bool
     {
         $gitify = $this->getGitifyInstance();
         if (!$gitify) {
@@ -134,12 +123,12 @@ class GitifyWatch {
      * @param string $message
      * @return bool
      */
-    public function commitAndPush($message = '')
+    public function commitAndPush(string $message = ''): bool
     {
         $repo = $this->getGitRepository();
         $environment = $this->getEnvironment();
 
-        if (!$repo) {
+        if (!$repo instanceof GitRepo) {
             $this->modx->log(modX::LOG_LEVEL_ERROR, 'Could not commit changes; repository was not found.');
             return false;
         }
@@ -165,6 +154,9 @@ class GitifyWatch {
         }
     }
 
+    /**
+     * @return array|false
+     */
     public function getEnvironment()
     {
         if (empty($this->environment)) {
@@ -183,7 +175,11 @@ class GitifyWatch {
         return $this->environment;
     }
 
-    public function niceImplode($items)
+    /**
+     * @param array $items
+     * @return false|string
+     */
+    public function niceImplode(array $items)
     {
         $count = count($items);
         if ($count === 1) {

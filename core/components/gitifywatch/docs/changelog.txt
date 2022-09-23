@@ -1,3 +1,10 @@
+Gitify Watch 2.0.0-rc1
+----------------------
+Released on 2022-09-23
+
+- MODX 3 compatability
+- Gitify 2 compatability
+
 ++ Gitify Watch 1.0.0-rc3
 ++ Released on 2015-10-07
 +++++++++++++++++++++++++

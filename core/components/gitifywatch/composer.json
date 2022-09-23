@@ -1,23 +1,5 @@
 {
-  "name": "modmore/gitifywatch",
-  "description": "Gitify Watch is a MODX plugin to complement the Gitify command line tool. It hooks into various MODX events, and will automatically extract and commit changes you make.",
-  "license": "MIT",
-  "require": {
-    "kbjr/git.php": "*",
-    "php": ">=7.2.5"
-  },
-  "repositories": [
-    {
-      "type": "package",
-      "package": {
-        "name": "kbjr/git.php",
-        "version": "0.2.0",
-        "source": {
-          "type": "git",
-          "url": "https://github.com/kbjr/git.php",
-          "reference": "master"
-        }
-      }
+    "require": {
+        "coyl/git": "^0.1.7"
     }
-  ]
 }

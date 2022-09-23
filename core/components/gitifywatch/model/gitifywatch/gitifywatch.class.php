@@ -1,15 +1,13 @@
 <?php
 
-use Kbjr\Git\Git;
-use Kbjr\Git\GitRepo;
+use Coyl\Git\Git;
+use Coyl\Git\GitRepo;
 use modmore\Gitify\Gitify;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
-require_once dirname(__DIR__, 2) . '/vendor/kbjr/git.php/src/Git.php';
-require_once dirname(__DIR__, 2) . '/vendor/kbjr/git.php/src/GitRepo.php';
 
 class GitifyWatch {
     public $config = [];
@@ -142,7 +140,7 @@ class GitifyWatch {
             // Add all changed files
             $log['add'] = $repo->add('.');
             $log['commit'] = $repo->commit($message);
-            $log['push'] = $repo->push($environment['remote'], $repo->activeBranch());
+            $log['push'] = $repo->push($environment['remote'], $repo->getActiveBranch());
             $this->modx->log(modX::LOG_LEVEL_WARN, 'Auto-committing & pushing results: ' . print_r($log, true), '', __METHOD__, __FILE__, __LINE__);
 
             return true;
